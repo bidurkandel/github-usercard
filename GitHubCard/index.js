@@ -4,6 +4,19 @@
     https://api.github.com/users/<your name>
 */
 
+import axios from "axios"
+
+axios.get('https://api.github.com/users/bidurkandel').then(response => {
+  // console.log(response);
+  parentDiv.appendChild(createCards(response))
+  .catch(error => {
+    console.log(error);
+  })
+});
+
+
+const parentDiv = document.querySelector('.cards');
+
 /*
   STEP 2: Inspect and study the data coming back, this is YOUR
     github info! You will need to understand the structure of this
@@ -28,7 +41,18 @@
     user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+const followersArray = ['tetondan','dustinmyers','justsml','luishrd','bigknell'];
+
+
+followersArray.forEach(function (element) {
+  axios.get(`https://api.github.com/users/${element}`)
+    .then(response => {
+      parentDiv.append(createCards(response))
+    })
+    .catch(error => {
+      console.log(error);
+    })
+})
 
 /*
   STEP 3: Create a function that accepts a single object as its only argument.
@@ -49,6 +73,59 @@ const followersArray = [];
       </div>
     </div>
 */
+
+function createCards(object) {
+  const container = document.createElement('div');
+  container.classList.add('card');
+  console.log(object);
+  const image = document.createElement('img');
+  image.src = object.data.avatar_url;
+  container.appendChild(image);
+
+
+  const info = document.createElement('div');
+  info.classList.add('card-info');
+  container.appendChild(info);
+
+  const realName = document.createElement('h3');
+  realName.classList.add('name');
+  info.appendChild(realName);
+  realName.textContent = object.data.name;
+
+  const screenName = document.createElement('p');
+  screenName.classList.add('username')
+  info.appendChild.screenName
+  screenName.textContent = object.data.login;
+
+  const userLoc = document.createElement('p');
+  info.appendChild(userLoc);
+  userLoc.textContent = 'Location:' + object.data.location;
+
+  const userProf = document.createElement('p');
+  info.appendChild(userProf);
+  userProf.textContent = 'Profile:';
+
+  const link = document.createElement('a');
+  userProf.appendChild(link);
+  link.textContent = object.data.html_url;
+
+  const userFollowers = document.createElement('p');
+  info.appendChild(userFollowers);
+  userFollowers.textContent = 'Followers:' + object.data.followers;
+
+  const userFollows = document.createElement('p');
+  info.appendChild(userFollows);
+  userFollows.textContent = object.data.following;
+
+  const userBio = document.createElement('p');
+  info.appendChild(userBio);
+  userBio.textContent = object.data.bio;
+
+
+  return container;
+}
+
+
 
 /*
   List of LS Instructors Github username's:
